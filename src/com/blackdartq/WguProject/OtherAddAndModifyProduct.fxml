@@ -69,7 +69,34 @@
             </GridPane>
             <VBox prefHeight="333.0" prefWidth="582.0" spacing="20.0">
                <children>
-                  <GridPane prefHeight="327.0" style="-fx-background-color: white; -fx-border-color: black;">
+                  <GridPane prefHeight="160.0" style="-fx-background-color: white; -fx-border-color: black;">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="91.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Part Id" />
+                        <Label text="Part Name" GridPane.columnIndex="1" />
+                        <Label text="Inventory Level" GridPane.columnIndex="2" />
+                        <Label text="Price per Unit" GridPane.columnIndex="3" />
+                        <ListView fx:id="productAddPartIdListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                        <ListView fx:id="productAddPartNameListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ListView fx:id="productAddInventoryLevelListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <ListView fx:id="productAddPricePerUnitListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Button fx:id="productAddButton" mnemonicParsing="false" onMouseClicked="#onProductAddButtonClicked" prefHeight="25.0" prefWidth="65.0" text="Add" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </GridPane>
+                  <GridPane prefHeight="160.0" style="-fx-background-color: white; -fx-border-color: black;">
                      <columnConstraints>
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -78,8 +105,8 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="264.0" minHeight="10.0" prefHeight="240.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="82.0" minHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="91.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <Label text="Part Id" />
@@ -87,7 +114,7 @@
                         <Label text="Inventory Level" GridPane.columnIndex="2" />
                         <Label text="Price per Unit" GridPane.columnIndex="3" />
                         <ListView fx:id="productDeletePartIDListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                        <ListView fx:id="productDeletePartNameListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="199.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <ListView fx:id="productDeletePartNameListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
@@ -95,7 +122,6 @@
                         <ListView fx:id="productDeleteInventoryLevelListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <ListView fx:id="productDeletePricePerUnitListView" focusTraversable="false" onMouseClicked="#selectEntirePartsRow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Button fx:id="productDeleteButton" mnemonicParsing="false" onMouseClicked="#deletePartsRow" prefHeight="25.0" prefWidth="65.0" text="Delete" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Button fx:id="productAddButton" mnemonicParsing="false" onMouseClicked="#onProductAddButtonClicked" prefHeight="25.0" prefWidth="65.0" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      </children>
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" />

@@ -1,9 +1,6 @@
 package com.blackdartq.WguProject;
 
-import com.blackdartq.WguProject.JavaResources.Inhouse;
-import com.blackdartq.WguProject.JavaResources.Inventory;
-import com.blackdartq.WguProject.JavaResources.Outsourced;
-import com.blackdartq.WguProject.JavaResources.Parts;
+import com.blackdartq.WguProject.JavaResources.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,31 +13,36 @@ import java.io.IOException;
 public class AddAndModifyParts extends Util {
 
     public void initialize() {
-        partsLabel.setText(this.getAddOrModify() + " Parts");
+        Inventory inventory = this.getInventory();
+        partsLabel.setText(this.getAddOrModifyPart() + " Parts");
 
-        if(this.getAddOrModify().equals("Modify")){
-            Inventory inventory = this.getInventory();
-            Parts part = inventory.lookupParts(this.getPartsRowSelected());
-            partsIDTextField.setText(String.valueOf(part.getPartID()));
-            partsNameTextField.setText(part.getName());
-            partsInventoryTextField.setText(String.valueOf(part.getInStock()));
-            partsPriceCostTextField.setText(String.valueOf(part.getPrice()));
-            partsMaxTextField.setText(String.valueOf(part.getMax()));
-            partsMinTextField.setText(String.valueOf(part.getMin()));
-            if(part instanceof Inhouse){
-                partsInHouseRadioButton.setSelected(true);
-                partsOutsourcedRadioButton.setSelected(false);
-                partsLabel2.setText("Machine ID");
-                Inhouse test = (Inhouse) part;
-                partsCompanyNameOrMachineIDTextField.setText(String.valueOf(test.getMachineID()));
-            }else if(part instanceof Outsourced){
-                partsInHouseRadioButton.setSelected(false);
-                partsOutsourcedRadioButton.setSelected(true);
-                partsLabel2.setText("Company Name");
-                Outsourced test = (Outsourced) part;
-                partsCompanyNameOrMachineIDTextField.setText(String.valueOf(test.getCompanyName()));
+        if(this.getAddOrModifyPart().equals("Modify")){
+            setTextFields(inventory.lookupParts(this.getPartsRowSelected()));
+        }
+    }
 
-            }
+    private void setTextFields(Parts part){
+        // sets normal part text fields
+        partsIDTextField.setText(String.valueOf(part.getPartID()));
+        partsNameTextField.setText(part.getName());
+        partsInventoryTextField.setText(String.valueOf(part.getInStock()));
+        partsPriceCostTextField.setText(String.valueOf(part.getPrice()));
+        partsMaxTextField.setText(String.valueOf(part.getMax()));
+        partsMinTextField.setText(String.valueOf(part.getMin()));
+
+        // sets the special class part text fields
+        if(part instanceof Inhouse){
+            partsInHouseRadioButton.setSelected(true);
+            partsOutsourcedRadioButton.setSelected(false);
+            partsLabel2.setText("Machine ID");
+            Inhouse test = (Inhouse) part;
+            partsCompanyNameOrMachineIDTextField.setText(String.valueOf(test.getMachineID()));
+        }else if(part instanceof Outsourced){
+            partsInHouseRadioButton.setSelected(false);
+            partsOutsourcedRadioButton.setSelected(true);
+            partsLabel2.setText("Company Name");
+            Outsourced test = (Outsourced) part;
+            partsCompanyNameOrMachineIDTextField.setText(String.valueOf(test.getCompanyName()));
         }
     }
 
@@ -87,11 +89,99 @@ public class AddAndModifyParts extends Util {
         }
     }
 
+    public void saveInhouseToInventoryOrProduct(boolean saveToInventory, Inhouse inhouse) throws IOException {
+        Inventory inventory = this.getInventory();
+        if(this.getAddOrModifyPart().equals("Modify")){
+            if(saveToInventory){
+                // sets the part to the row being modified in inventory
+                inventory.removeParts(this.getPartsRowSelected());
+                inventory.addParts(this.getPartsRowSelected(), inhouse);
+            }else{
+                // sets the part to the row being modified in product
+                Product product = inventory.lookupProduct(this.getProductRowSelected());
+                product.addAssociatedPart(this.getPartsRowSelected(), inhouse);
+                inventory.addProduct(this.getProductRowSelected(), product);
+            }
+        }else{
+            if(saveToInventory){
+                // sets the part to the row in inventory
+                inventory.addParts(inhouse);
+            }else {
+                // sets the part to the row in product
+                Product product = new Product();
+                product.addAssociatedPart(inhouse);
+                inventory.addProduct(product);
+            }
+        }
+
+        // Saves state and changes window
+        this.setInventory(inventory);
+//        changeWindowTo(this.getWindowToSwitchTo(), getStage(partsSaveButton));
+        backToOtherWindow(partsCancelButton);
+    }
+
+    public void saveOutsourcedToInventoryOrProduct(boolean saveToInventory, Outsourced outsourced) throws IOException {
+        Inventory inventory = this.getInventory();
+        if(saveToInventory){
+            if (this.getAddOrModifyPart().equals("Modify")) {
+                    // sets the part to the row being modified in inventory
+                    inventory.removeParts(this.getPartsRowSelected());
+                    inventory.addParts(this.getPartsRowSelected(), outsourced);
+            }else{
+                inventory.addParts(outsourced);
+            }
+        }else{
+//            if (this.getAddOrModifyProduct().equals("Modify")) {
+            Product product = inventory.lookupProduct(this.getProductRowSelected());
+            product.addAssociatedPart(outsourced);
+            inventory.addProduct(this.getProductRowSelected(), product);
+//            }else{
+//                Product product = inventory.lookupProduct(this.getProductRowSelected());
+//                product.addAssociatedPart(outsourced);
+//                inventory.addProduct(this.getProductRowSelected(), product);
+
+            }
+        // Saves state and changes window
+        this.setInventory(inventory);
+//        changeWindowTo(this.getWindowToSwitchTo(), getStage(partsSaveButton));
+        backToOtherWindow(partsCancelButton);
+        }
+
+//        if (this.getAddOrModifyPart().equals("Modify")) {
+//            if (saveToInventory) {
+//                // sets the part to the row being modified in inventory
+//                inventory.removeParts(this.getPartsRowSelected());
+//                inventory.addParts(this.getPartsRowSelected(), outsourced);
+//            } else {
+//                // sets the part to the row being modified in product
+//                Product product = inventory.lookupProduct(this.getProductRowSelected());
+//                product.addAssociatedPart(this.getPartsRowSelected(), outsourced);
+//                inventory.addProduct(this.getProductRowSelected(), product);
+//            }
+//        } else {
+//            if (saveToInventory) {
+//                // sets the part to the row in inventory
+//                inventory.addParts(outsourced);
+//            } else {
+//                // sets the part to the row in product
+//                Product product = new Product();
+//                product.addAssociatedPart(outsourced);
+//                inventory.addProduct(product);
+//            }
+//        }
+//        // Saves state and changes window
+//        this.setInventory(inventory);
+////        changeWindowTo(this.getWindowToSwitchTo(), getStage(partsSaveButton));
+//        backToOtherWindow(partsCancelButton);
+//    }
+
     @FXML
     public void onSaveButtonClick(MouseEvent event) throws IOException {
-        Inventory inventory = this.getInventory();
+        // checks which radio button is selected
         if (partsInHouseRadioButton.isSelected()) {
             Inhouse inhouse = new Inhouse();
+
+            // gets the text from the text fields and parses them to type
             inhouse.setMachineID(getTextFieldInt(partsCompanyNameOrMachineIDTextField));
             inhouse.setPartID(getTextFieldInt(partsIDTextField));
             inhouse.setName(partsNameTextField.getText());
@@ -99,14 +189,13 @@ public class AddAndModifyParts extends Util {
             inhouse.setPrice(getTextFieldDouble(partsPriceCostTextField));
             inhouse.setMax(getTextFieldInt(partsMaxTextField));
             inhouse.setMin(getTextFieldInt(partsMinTextField));
-            if(this.getAddOrModify().equals("Modify")){
-                inventory.removeParts(this.getPartsRowSelected());
-                inventory.addParts(this.getPartsRowSelected(), inhouse);
-            }else{
-                inventory.addParts(inhouse);
-            }
+
+            // saves in house to product or inventory based on states modify product
+            saveInhouseToInventoryOrProduct(this.isModifyingProduct(), inhouse);
         } else {
             Outsourced outsourced = new Outsourced();
+
+            // gets the text from the text fields and parses them to type
             outsourced.setCompanyName(partsCompanyNameOrMachineIDTextField.getText());
             outsourced.setPartID(getTextFieldInt(partsIDTextField));
             outsourced.setName(partsNameTextField.getText());
@@ -114,15 +203,9 @@ public class AddAndModifyParts extends Util {
             outsourced.setPrice(getTextFieldDouble(partsPriceCostTextField));
             outsourced.setMax(getTextFieldInt(partsMaxTextField));
             outsourced.setMin(getTextFieldInt(partsMinTextField));
-            if(this.getAddOrModify().equals("Modify")){
-                inventory.removeParts(this.getPartsRowSelected());
-                inventory.addParts(this.getPartsRowSelected(), outsourced);
-            }else{
-                inventory.addParts(outsourced);
-            }
-        }
-        this.setInventory(inventory);
-        changeWindowTo(1, getStage(partsSaveButton));
 
+            // saves in house to product or inventory based on states modify product
+            saveOutsourcedToInventoryOrProduct(this.isModifyingProduct(), outsourced);
+        }
     }
 }

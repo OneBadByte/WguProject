@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class MainWindowController extends Util {
@@ -97,14 +96,16 @@ public class MainWindowController extends Util {
     @FXML
     public void onPartsAddOrModifyButtonClicked(MouseEvent event) throws IOException, InterruptedException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        this.setAddOrModify(getSourceString(event.getSource().toString()));
+        this.setAddOrModifyPart(getSourceString(event.getSource().toString()));
+        this.setWindowToSwitchTo(1);
         changeWindowTo(2, stage);
     }
 
     @FXML
     public void onProductAddOrModifyButtonClicked(MouseEvent event) throws IOException, InterruptedException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        this.setAddOrModify(getSourceString(event.getSource().toString()));
+        this.setAddOrModifyProduct(getSourceString(event.getSource().toString()));
+        this.setWindowToSwitchTo(1);
         changeWindowTo(3, stage);
     }
 
@@ -119,11 +120,11 @@ public class MainWindowController extends Util {
 
     //--------------------------
 
-    @FXML
-    public void backToMainWindow(MouseEvent event) throws IOException {
-        Button button = (Button) event.getSource();
-        changeWindowTo(1, getStage(button));
-    }
+//    @FXML
+//    public void backToMainWindow(MouseEvent event) throws IOException {
+//        Button button = (Button) event.getSource();
+//        changeWindowTo(1, getStage(button));
+//    }
 
     //------------------------
     public void fillOutProductListView() {

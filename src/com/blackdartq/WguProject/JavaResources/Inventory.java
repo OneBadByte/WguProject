@@ -8,6 +8,10 @@ public class Inventory {
     private ArrayList<Parts> parts = new ArrayList<>();
 
     //++++ products functions ++++
+    public int getProductSize(){
+        return this.products.size();
+    }
+
     public void addProduct(Product product) {
         this.products.add(product);
     }

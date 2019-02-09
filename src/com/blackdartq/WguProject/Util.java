@@ -1,7 +1,9 @@
 package com.blackdartq.WguProject;
 
+import com.blackdartq.WguProject.JavaResources.Inhouse;
 import com.blackdartq.WguProject.JavaResources.Inventory;
-import javafx.collections.ObservableList;
+import com.blackdartq.WguProject.JavaResources.Parts;
+import com.blackdartq.WguProject.JavaResources.Product;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,9 +18,36 @@ import java.util.ArrayList;
 abstract class State{
 
     private Inventory inventory = new Inventory();
-    private String addOrModify = "Add";
+    private String addOrModifyPart = "Add";
+    private String addOrModifyProduct = "Add";
     private int partsRowSelected = 0;
     private int productRowSelected = 0;
+    private boolean modifyingProduct = false;
+    private int windowToSwitchTo = 1;
+
+    public String getAddOrModifyProduct() {
+        return addOrModifyProduct;
+    }
+
+    public void setAddOrModifyProduct(String addOrModifyProduct) {
+        this.addOrModifyProduct = addOrModifyProduct;
+    }
+
+    public int getWindowToSwitchTo() {
+        return windowToSwitchTo;
+    }
+
+    public void setWindowToSwitchTo(int windowToSwitchTo) {
+        this.windowToSwitchTo = windowToSwitchTo;
+    }
+
+    public boolean isModifyingProduct() {
+        return modifyingProduct;
+    }
+
+    public void setModifyingProduct(boolean modifyingProduct) {
+        this.modifyingProduct = modifyingProduct;
+    }
 
     public int getProductRowSelected() {
         return productRowSelected;
@@ -44,18 +73,22 @@ abstract class State{
         this.inventory = inventory;
     }
 
-    public String getAddOrModify() {
-        return addOrModify;
+    public String getAddOrModifyPart() {
+        return addOrModifyPart;
     }
 
-    public void setAddOrModify(String addOrModify) {
-        this.addOrModify = addOrModify;
+    public void setAddOrModifyPart(String addOrModifyPart) {
+        this.addOrModifyPart = addOrModifyPart;
     }
 
     public void setAll(State state){
         this.setInventory(state.inventory);
-        this.setAddOrModify(state.addOrModify);
+        this.setAddOrModifyPart(state.addOrModifyPart);
         this.setPartsRowSelected(state.getPartsRowSelected());
+        this.addOrModifyProduct = state.addOrModifyProduct;
+        this.productRowSelected = state.productRowSelected;
+        this.modifyingProduct = state.modifyingProduct;
+        this.windowToSwitchTo = state.windowToSwitchTo;
     }
 
     public State getState(){
@@ -117,9 +150,18 @@ abstract class Util extends State {
     }
 
     @FXML
-    public void backToMainWindow(MouseEvent event) throws IOException {
+    public void backToOtherWindow(MouseEvent event) throws IOException {
         Button button = (Button) event.getSource();
-        changeWindowTo(1, getStage(button));
+        int placeHolderWindowValue = this.getWindowToSwitchTo();
+        this.setWindowToSwitchTo(1);
+        changeWindowTo(placeHolderWindowValue, getStage(button));
+    }
+
+    @FXML
+    public void backToOtherWindow(Control control) throws IOException {
+        int placeHolderWindowValue = this.getWindowToSwitchTo();
+        this.setWindowToSwitchTo(1);
+        changeWindowTo(placeHolderWindowValue, getStage(control));
     }
 
     public String getSourceString(String eventSource){
@@ -175,7 +217,6 @@ class ListViewUtil<T>{
 
     public void fillOutListView(ListView listView, ArrayList arrayList){
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        System.out.println(arrayList);
         listView.getItems().setAll(arrayList);
     }
 
@@ -190,22 +231,5 @@ class ListViewUtil<T>{
         listViews[2].getSelectionModel().select(rowSelected);
         listViews[3].getSelectionModel().select(rowSelected);
     }
-
-
-//    public void fillOutListView(ListView listView, int integer){
-//        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-//        listView.getItems().setAll(integer);
-//    }
-//
-//    public void fillOutListView(ListView listView, String string){
-//        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-//        listView.getItems().setAll(string);
-//    }
-//
-//    public void fillOutListView(ListView listView, double doub){
-//        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-//        listView.getItems().setAll(doub);
-//    }
-
 }
 

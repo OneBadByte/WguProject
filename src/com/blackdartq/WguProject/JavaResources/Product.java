@@ -49,6 +49,11 @@ public class Product {
         this.associatedParts.add(part);
     }
 
+    public void addAssociatedPart(int index, Parts part){
+        this.associatedParts.remove(index);
+        this.associatedParts.add(index, part);
+    }
+
     public boolean removeAssoicatedPart(int partNumber){
         try{
             this.associatedParts.remove(partNumber);
@@ -61,6 +66,10 @@ public class Product {
 
     public Parts lookupAssociatedPart(int partNumber){
         return this.associatedParts.get(partNumber);
+    }
+
+    public ArrayList<Parts> getAllAssociatedParts(){
+        return this.associatedParts;
     }
 
     //-------------------------------------
