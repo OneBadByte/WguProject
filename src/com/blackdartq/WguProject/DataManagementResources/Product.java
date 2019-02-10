@@ -1,4 +1,4 @@
-package com.blackdartq.WguProject.JavaResources;
+package com.blackdartq.WguProject.DataManagementResources;
 
 import java.util.ArrayList;
 

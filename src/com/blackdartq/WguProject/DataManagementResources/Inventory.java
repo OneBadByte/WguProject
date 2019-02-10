@@ -1,4 +1,4 @@
-package com.blackdartq.WguProject.JavaResources;
+package com.blackdartq.WguProject.DataManagementResources;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,8 @@ public class Inventory {
 
     private ArrayList<Product> products = new ArrayList<>();
     private ArrayList<Parts> parts = new ArrayList<>();
+    private Parts partForUpdate = new Parts(){};
+    private Product productForUpdate = new Product();
 
     //++++ products functions ++++
     public int getProductSize(){
@@ -36,8 +38,8 @@ public class Inventory {
     }
 
     public void updateProduct(int productNumber){
-        Product product = this.products.get(productNumber);
-        // add something here
+        this.products.remove(productNumber);
+        this.products.add(productNumber, productForUpdate);
     }
     //----------------------------
 
@@ -65,10 +67,9 @@ public class Inventory {
     }
 
     public void updateParts(int partNumber){
-        Parts part = this.parts.get(partNumber);
-        // add something here
+        this.parts.remove(partNumber);
+        this.parts.add(partNumber, partForUpdate);
     }
-
     //----------------------------
 
     public void createTestPartsData(){
@@ -84,8 +85,6 @@ public class Inventory {
         this.addParts(part2);
         this.addParts(part3);
         this.addParts(part4);
-
-
     }
 
     public void createTestProductData(){
@@ -108,8 +107,6 @@ public class Inventory {
         this.addProduct(product2);
         this.addProduct(product3);
         this.addProduct(product4);
-
-
     }
 
     public int getPartsSize(){

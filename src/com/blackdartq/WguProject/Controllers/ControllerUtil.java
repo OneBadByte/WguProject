@@ -1,9 +1,6 @@
-package com.blackdartq.WguProject;
+package com.blackdartq.WguProject.Controllers;
 
-import com.blackdartq.WguProject.JavaResources.Inhouse;
-import com.blackdartq.WguProject.JavaResources.Inventory;
-import com.blackdartq.WguProject.JavaResources.Parts;
-import com.blackdartq.WguProject.JavaResources.Product;
+import com.blackdartq.WguProject.DataManagementResources.Inventory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,13 +14,34 @@ import java.util.ArrayList;
 
 abstract class State{
 
+    // Holds all the data for the entire project
     private Inventory inventory = new Inventory();
+
+    // Controls if adding or modifing product and/or part
     private String addOrModifyPart = "Add";
     private String addOrModifyProduct = "Add";
+
+    /* gets the rows selected in the list views for the part
+     * used to get the data from the states inventory
+     */
     private int partsRowSelected = 0;
-    private int productRowSelected = 0;
+    private int productRowSelected = 1;
+
+    // checks if modifing product and if not uses the inventory
     private boolean modifyingProduct = false;
+
+    /* controls the window to switch to
+    * 1 main window
+    * 2 parts window
+    * 3 products window
+     */
     private int windowToSwitchTo = 1;
+
+    /* locks the row selected so that when a row is selected in the listview
+     * it doesn't change the row being edited
+     */
+
+    // Getters and Setters for variables above
     private boolean lockSearch = false;
 
     public boolean isLockSearch() {
@@ -90,6 +108,7 @@ abstract class State{
         this.addOrModifyPart = addOrModifyPart;
     }
 
+    // used to transfer state to another controller
     public void setAll(State state){
         this.setInventory(state.inventory);
         this.setAddOrModifyPart(state.addOrModifyPart);
@@ -100,57 +119,53 @@ abstract class State{
         this.windowToSwitchTo = state.windowToSwitchTo;
     }
 
+    // used to get the state from another controller
     public State getState(){
         return this;
     }
 }
 
-abstract class Util extends State {
+abstract class ControllerUtil extends State {
 
-    private String mainWindow = "MainWindow.fxml";
-    private String addAndModifyParts = "AddAndModifyParts.fxml";
-    private String addAndModifyProduct = "AddAndModifyProduct.fxml";
+    final String mainWindow = "../FXML/MainWindow.fxml";
+    final String addAndModifyParts = "../FXML/AddAndModifyParts.fxml";
+    final String addAndModifyProduct = "../FXML/AddAndModifyProduct.fxml";
 
-    public void changeWindowTo(int windowChoice, Stage stage) throws IOException {
+    public void createStageAndSwitchScene(Stage stage, FXMLLoader loader) throws IOException {
         Parent parent;
         Scene scene;
+        parent = loader.load();
+        scene = new Scene(parent);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void changeSceneTo(int windowChoice, Stage stage) throws IOException {
         FXMLLoader loader;
         switch (windowChoice){
             case 2:
-                loader = new FXMLLoader(getClass().getResource(this.addAndModifyParts));
                 AddAndModifyParts control2 = new AddAndModifyParts();
+                loader = new FXMLLoader(getClass().getResource(this.addAndModifyParts));
                 control2.setAll(this.getState());
                 loader.setController(control2);
-                parent = loader.load();
-                scene = new Scene(parent);
-                stage.setScene(scene);
-                stage.show();
+                createStageAndSwitchScene(stage, loader);
                 break;
             case 3:
                 loader = new FXMLLoader(getClass().getResource(this.addAndModifyProduct));
                 AddAndModifyProduct control3 = new AddAndModifyProduct();
                 control3.setAll(this.getState());
                 loader.setController(control3);
-                parent = loader.load();
-                scene = new Scene(parent);
-                stage.setScene(scene);
-                stage.show();
+                createStageAndSwitchScene(stage, loader);
                 break;
-
             case 1:
             default:
                 loader = new FXMLLoader(getClass().getResource(this.mainWindow));
                 MainWindowController control = new MainWindowController();
                 control.setAll(this.getState());
                 loader.setController(control);
-                parent = loader.load();
-                scene = new Scene(parent);
-                stage.setScene(scene);
-                stage.show();
-                control.fillOutPartsListView();
+                createStageAndSwitchScene(stage, loader);
                 break;
         }
-
     }
 
     public Stage getStage(Control control){
@@ -163,14 +178,14 @@ abstract class Util extends State {
         Button button = (Button) event.getSource();
         int placeHolderWindowValue = this.getWindowToSwitchTo();
         this.setWindowToSwitchTo(1);
-        changeWindowTo(placeHolderWindowValue, getStage(button));
+        changeSceneTo(placeHolderWindowValue, getStage(button));
     }
 
     @FXML
     public void backToOtherWindow(Control control) throws IOException {
         int placeHolderWindowValue = this.getWindowToSwitchTo();
         this.setWindowToSwitchTo(1);
-        changeWindowTo(placeHolderWindowValue, getStage(control));
+        changeSceneTo(placeHolderWindowValue, getStage(control));
     }
 
     public String getSourceString(String eventSource){
@@ -213,10 +228,7 @@ abstract class Util extends State {
 }
 
 class ListViewUtil<T>{
-
     private T t;
-
-
 
     public void fillOutListViewSection(ListView[] listViews, ArrayList[] arrayLists){
         // fill out list views

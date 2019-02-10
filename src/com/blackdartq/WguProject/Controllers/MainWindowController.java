@@ -1,8 +1,8 @@
-package com.blackdartq.WguProject;
+package com.blackdartq.WguProject.Controllers;
 
-import com.blackdartq.WguProject.JavaResources.Inventory;
-import com.blackdartq.WguProject.JavaResources.Parts;
-import com.blackdartq.WguProject.JavaResources.Product;
+import com.blackdartq.WguProject.DataManagementResources.Inventory;
+import com.blackdartq.WguProject.DataManagementResources.Parts;
+import com.blackdartq.WguProject.DataManagementResources.Product;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -13,9 +13,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 
-public class MainWindowController extends Util {
+public class MainWindowController extends ControllerUtil {
 
     public void initialize() {
+        // Creates test products and parts of the inventory
         Inventory inventory = this.getInventory();
         if (inventory.getPartsSize() == 0) {
             inventory.createTestPartsData();
@@ -28,11 +29,10 @@ public class MainWindowController extends Util {
 
     }
 
-    //++++ Main Window Controls ++++
+    //+++++ Main Window FXML Controls +++++
+    // Buttons
     @FXML
     Button mainExitButton;
-
-    // Main Parts Id's
     @FXML
     Button mainPartsAddButton;
     @FXML
@@ -42,7 +42,21 @@ public class MainWindowController extends Util {
     @FXML
     Button mainPartsSearchButton;
     @FXML
+    Button mainProductsAddButton;
+    @FXML
+    Button mainProductsModifyButton;
+    @FXML
+    Button mainProductsDeleteButton;
+    @FXML
+    Button mainProductsSearchButton;
+
+    // TextFields
+    @FXML
     TextField mainPartsSearchTextField;
+    @FXML
+    public TextField mainProductsSearchTextField;
+
+    // ListViews
     @FXML
     public ListView mainPartsIDListView;
     @FXML
@@ -51,28 +65,6 @@ public class MainWindowController extends Util {
     public ListView mainPartsInventoryLevelListView;
     @FXML
     public ListView mainPartsPerUnitListView;
-
-    public ListView[] getPartsListViews(){
-        ListView[] listViews = {
-                mainPartsIDListView,
-                mainPartsNameListView,
-                mainPartsInventoryLevelListView,
-                mainPartsPerUnitListView,
-        };
-        return listViews;
-    }
-
-    // Main Product Id's
-    @FXML
-    Button mainProductsAddButton;
-    @FXML
-    Button mainProductsModifyButton;
-    @FXML
-    Button mainProductsDeleteButton;
-    @FXML
-    Button mainProductsSearchButton;
-    @FXML
-    public TextField mainProductsSearchTextField;
     @FXML
     public ListView mainProductsIDListView;
     @FXML
@@ -81,74 +73,30 @@ public class MainWindowController extends Util {
     public ListView mainProductsInventoryLevelListView;
     @FXML
     public ListView mainProductsPerUnitListView;
+    //--------------------------------------
 
-    public ListView[] getProductListViews(){
-        ListView[] listViews = {
-                mainProductsIDListView,
-                mainProductsNameListView,
-                mainProductsInventoryLevelListView,
-                mainProductsPerUnitListView,
-        };
-        return listViews;
-    }
-
-
+    //+++++ Main Window FXML Functions +++++
     @FXML
-    public void onPartsAddOrModifyButtonClicked(MouseEvent event) throws IOException, InterruptedException {
+    public void onPartsAddOrModifyButtonClicked(MouseEvent event) throws IOException{
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         this.setAddOrModifyPart(getSourceString(event.getSource().toString()));
         this.setModifyingProduct(false);
         this.setWindowToSwitchTo(1);
-        changeWindowTo(2, stage);
+        changeSceneTo(2, stage);
     }
 
     @FXML
-    public void onProductAddOrModifyButtonClicked(MouseEvent event) throws IOException, InterruptedException {
+    public void onProductAddOrModifyButtonClicked(MouseEvent event) throws IOException{
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         this.setAddOrModifyProduct(getSourceString(event.getSource().toString()));
         this.setModifyingProduct(true);
         this.setWindowToSwitchTo(1);
-        changeWindowTo(3, stage);
+        changeSceneTo(3, stage);
     }
 
     @FXML
     public void onExitButtonClick() {
         Platform.exit();
-    }
-
-    //------------------------------
-    //++++ Product Controls ++++
-
-
-    //--------------------------
-
-    public void fillOutProductListView() {
-        ListViewUtil listViewUtil = new ListViewUtil();
-        listViewUtil.fillOutListViewSection(getProductListViews(), getMainProductListViewData());
-    }
-
-
-
-    public void fillOutProductListView(Product product) {
-        ListViewUtil listViewUtil = new ListViewUtil();
-        listViewUtil.fillOutListView(mainProductsIDListView, product.getProductId());
-        listViewUtil.fillOutListView(mainProductsNameListView, product.getName());
-        listViewUtil.fillOutListView(mainProductsInventoryLevelListView, product.getInStock());
-        listViewUtil.fillOutListView(mainProductsPerUnitListView, product.getPrice());
-    }
-
-    public void fillOutPartsListView() {
-        ListViewUtil listViewUtil = new ListViewUtil();
-        listViewUtil.fillOutListViewSection(getPartsListViews(), getMainPartsListViewData());
-    }
-
-    public void fillOutPartsListView(Parts part) {
-        // fill out list views
-        ListViewUtil listViewUtil = new ListViewUtil();
-        listViewUtil.fillOutListView(mainPartsIDListView, part.getPartID());
-        listViewUtil.fillOutListView(mainPartsNameListView, part.getName());
-        listViewUtil.fillOutListView(mainPartsInventoryLevelListView, part.getInStock());
-        listViewUtil.fillOutListView(mainPartsPerUnitListView, part.getPrice());
     }
 
     @FXML
@@ -220,5 +168,55 @@ public class MainWindowController extends Util {
         this.setPartsRowSelected(thing - 1);
         mainProductsSearchTextField.clear();
     }
+    //--------------------------------------
+
+    //+++++ Main Window Helper Functions +++
+    public ListView[] getPartsListViews(){
+        ListView[] listViews = {
+                mainPartsIDListView,
+                mainPartsNameListView,
+                mainPartsInventoryLevelListView,
+                mainPartsPerUnitListView,
+        };
+        return listViews;
+    }
+
+    public ListView[] getProductListViews(){
+        ListView[] listViews = {
+                mainProductsIDListView,
+                mainProductsNameListView,
+                mainProductsInventoryLevelListView,
+                mainProductsPerUnitListView,
+        };
+        return listViews;
+    }
+    public void fillOutProductListView() {
+        ListViewUtil listViewUtil = new ListViewUtil();
+        listViewUtil.fillOutListViewSection(getProductListViews(), getMainProductListViewData());
+    }
+
+    public void fillOutProductListView(Product product) {
+        ListViewUtil listViewUtil = new ListViewUtil();
+        listViewUtil.fillOutListView(mainProductsIDListView, product.getProductId());
+        listViewUtil.fillOutListView(mainProductsNameListView, product.getName());
+        listViewUtil.fillOutListView(mainProductsInventoryLevelListView, product.getInStock());
+        listViewUtil.fillOutListView(mainProductsPerUnitListView, product.getPrice());
+    }
+
+    public void fillOutPartsListView() {
+        ListViewUtil listViewUtil = new ListViewUtil();
+        listViewUtil.fillOutListViewSection(getPartsListViews(), getMainPartsListViewData());
+    }
+
+    public void fillOutPartsListView(Parts part) {
+        // fill out list views
+        ListViewUtil listViewUtil = new ListViewUtil();
+        listViewUtil.fillOutListView(mainPartsIDListView, part.getPartID());
+        listViewUtil.fillOutListView(mainPartsNameListView, part.getName());
+        listViewUtil.fillOutListView(mainPartsInventoryLevelListView, part.getInStock());
+        listViewUtil.fillOutListView(mainPartsPerUnitListView, part.getPrice());
+    }
+    //--------------------------------------
+
 }
 
