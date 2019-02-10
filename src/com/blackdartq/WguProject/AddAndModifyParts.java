@@ -89,91 +89,48 @@ public class AddAndModifyParts extends Util {
         }
     }
 
-    public void saveInhouseToInventoryOrProduct(boolean saveToInventory, Inhouse inhouse) throws IOException {
+    public void saveInhouseToInventoryOrProduct(boolean saveToProduct, Inhouse inhouse) throws IOException {
         Inventory inventory = this.getInventory();
-        if(this.getAddOrModifyPart().equals("Modify")){
-            if(saveToInventory){
+        System.out.println("save to inventory: " + saveToProduct);
+        if (!saveToProduct) {
+            if (this.getAddOrModifyPart().equals("Modify")) {
                 // sets the part to the row being modified in inventory
                 inventory.removeParts(this.getPartsRowSelected());
                 inventory.addParts(this.getPartsRowSelected(), inhouse);
-            }else{
-                // sets the part to the row being modified in product
-                Product product = inventory.lookupProduct(this.getProductRowSelected());
-                product.addAssociatedPart(this.getPartsRowSelected(), inhouse);
-                inventory.addProduct(this.getProductRowSelected(), product);
-            }
-        }else{
-            if(saveToInventory){
-                // sets the part to the row in inventory
+            } else {
                 inventory.addParts(inhouse);
-            }else {
-                // sets the part to the row in product
-                Product product = new Product();
-                product.addAssociatedPart(inhouse);
-                inventory.addProduct(product);
             }
+        } else {
+            Product product = inventory.lookupProduct(this.getProductRowSelected());
+            product.addAssociatedPart(inhouse);
+            inventory.addProduct(this.getProductRowSelected(), product);
+            // Saves state and changes window
         }
-
-        // Saves state and changes window
         this.setInventory(inventory);
-//        changeWindowTo(this.getWindowToSwitchTo(), getStage(partsSaveButton));
         backToOtherWindow(partsCancelButton);
+
     }
 
-    public void saveOutsourcedToInventoryOrProduct(boolean saveToInventory, Outsourced outsourced) throws IOException {
+    public void saveOutsourcedToInventoryOrProduct(boolean saveToProduct, Outsourced outsourced) throws IOException {
         Inventory inventory = this.getInventory();
-        if(saveToInventory){
+        System.out.println("save to inventory: " + saveToProduct);
+        if (!saveToProduct) {
             if (this.getAddOrModifyPart().equals("Modify")) {
-                    // sets the part to the row being modified in inventory
-                    inventory.removeParts(this.getPartsRowSelected());
-                    inventory.addParts(this.getPartsRowSelected(), outsourced);
-            }else{
+                // sets the part to the row being modified in inventory
+                inventory.removeParts(this.getPartsRowSelected());
+                inventory.addParts(this.getPartsRowSelected(), outsourced);
+            } else {
                 inventory.addParts(outsourced);
             }
-        }else{
-//            if (this.getAddOrModifyProduct().equals("Modify")) {
+        } else {
             Product product = inventory.lookupProduct(this.getProductRowSelected());
             product.addAssociatedPart(outsourced);
             inventory.addProduct(this.getProductRowSelected(), product);
-//            }else{
-//                Product product = inventory.lookupProduct(this.getProductRowSelected());
-//                product.addAssociatedPart(outsourced);
-//                inventory.addProduct(this.getProductRowSelected(), product);
-
-            }
-        // Saves state and changes window
-        this.setInventory(inventory);
-//        changeWindowTo(this.getWindowToSwitchTo(), getStage(partsSaveButton));
-        backToOtherWindow(partsCancelButton);
+            // Saves state and changes window
         }
-
-//        if (this.getAddOrModifyPart().equals("Modify")) {
-//            if (saveToInventory) {
-//                // sets the part to the row being modified in inventory
-//                inventory.removeParts(this.getPartsRowSelected());
-//                inventory.addParts(this.getPartsRowSelected(), outsourced);
-//            } else {
-//                // sets the part to the row being modified in product
-//                Product product = inventory.lookupProduct(this.getProductRowSelected());
-//                product.addAssociatedPart(this.getPartsRowSelected(), outsourced);
-//                inventory.addProduct(this.getProductRowSelected(), product);
-//            }
-//        } else {
-//            if (saveToInventory) {
-//                // sets the part to the row in inventory
-//                inventory.addParts(outsourced);
-//            } else {
-//                // sets the part to the row in product
-//                Product product = new Product();
-//                product.addAssociatedPart(outsourced);
-//                inventory.addProduct(product);
-//            }
-//        }
-//        // Saves state and changes window
-//        this.setInventory(inventory);
-////        changeWindowTo(this.getWindowToSwitchTo(), getStage(partsSaveButton));
-//        backToOtherWindow(partsCancelButton);
-//    }
+        this.setInventory(inventory);
+        backToOtherWindow(partsCancelButton);
+    }
 
     @FXML
     public void onSaveButtonClick(MouseEvent event) throws IOException {

@@ -2,36 +2,40 @@ package com.blackdartq.WguProject;
 
 import com.blackdartq.WguProject.JavaResources.*;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
+import javax.xml.soap.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class AddAndModifyProduct extends Util {
 
-    private ArrayList<Parts> productPartsHolder = new ArrayList<>();
+    private Product productHolder = new Product();
+    private ArrayList<Integer> deleteHolder = new ArrayList<>();
 
     public void initialize() {
         productHeaderLabel.setText(this.getAddOrModifyPart() + " Product");
 
         if (this.getAddOrModifyProduct().equals("Modify")) {
             Inventory inventory = this.getInventory();
-            productPartsHolder = inventory.lookupProduct(this.getProductRowSelected()).getAllAssociatedParts();
-            System.out.println("here " + productPartsHolder);
-            Product product = inventory.lookupProduct(this.getProductRowSelected());
-            productIDTextField.setText(String.valueOf(product.getProductId()));
-            productNameTextField.setText(product.getName());
-            productInventoryTextField.setText(String.valueOf(product.getInStock()));
-            productPriceTextField.setText(String.valueOf(product.getPrice()));
-            productMaxTextField.setText(String.valueOf(product.getMax()));
-            productMinTextField.setText(String.valueOf(product.getMin()));
+            // assigns the product row selected
+            productHolder = inventory.lookupProduct(this.getProductRowSelected());
+
+            // sets all the text fields to that products data
+            productIDTextField.setText(String.valueOf(productHolder.getProductId()));
+            productNameTextField.setText(productHolder.getName());
+            productInventoryTextField.setText(String.valueOf(productHolder.getInStock()));
+            productPriceTextField.setText(String.valueOf(productHolder.getPrice()));
+            productMaxTextField.setText(String.valueOf(productHolder.getMax()));
+            productMinTextField.setText(String.valueOf(productHolder.getMin()));
             ListViewUtil listViewUtil = new ListViewUtil();
             listViewUtil.fillOutListViewSection(getProductDeleteListViews(), getProductPartsData());
         }else{
-            this.setProductRowSelected(this.getInventory().getProductSize()+1);
+            productSaveButton.setDisable(true);
+            this.setProductRowSelected(this.getInventory().getProductSize());
         }
     }
 
@@ -47,6 +51,9 @@ public class AddAndModifyProduct extends Util {
     @FXML
     private Button productDeleteButton;
     @FXML
+    private Button productSearchButton;
+
+    @FXML
     private TextField productIDTextField;
     @FXML
     private TextField productNameTextField;
@@ -58,6 +65,20 @@ public class AddAndModifyProduct extends Util {
     private TextField productMaxTextField;
     @FXML
     private TextField productMinTextField;
+    @FXML
+    private TextField productSearchTextField;
+
+    public TextField[] getProductTextFields() {
+        TextField[] textFields = {
+                productIDTextField,
+                productNameTextField,
+                productInventoryTextField,
+                productPriceTextField,
+                productMaxTextField,
+                productMinTextField,
+        };
+        return textFields;
+    }
 
     // Delete List views
     @FXML
@@ -80,35 +101,63 @@ public class AddAndModifyProduct extends Util {
     }
 
     public ArrayList[] getProductPartsData() {
-        Inventory inventory = this.getInventory();
-        Product product = inventory.lookupProduct(this.getProductRowSelected());
-        System.out.println(product.getAllPartsIDs());
         ArrayList[] arrayLists = {
-                product.getAllPartsIDs(),
-                product.getAllPartsNames(),
-                product.getAllPartsInStocks(),
-                product.getAllPartsPrices()
+                productHolder.getAllPartsIDs(),
+                productHolder.getAllPartsNames(),
+                productHolder.getAllPartsInStocks(),
+                productHolder.getAllPartsPrices()
         };
         return arrayLists;
     }
 
-    //++++ Product functions
+    //++++ Product functions ++++
+
+    @FXML
+    public void checkForCompleteData(){
+        boolean setDisable = false;
+        for(TextField tf : getProductTextFields()){
+           if(tf.getText().equals("")){
+               tf.setStyle("-fx-background-color: #FFC6C6; -fx-border-color: grey");
+               setDisable = true;
+           }else{
+               tf.setStyle("-fx-background-color: white; -fx-border-color: grey");
+           }
+        }
+        productSaveButton.setDisable(setDisable);
+    }
+
+    @FXML
+    public void searchForPart() {
+        String searchText = productSearchTextField.getText();
+        if (searchText.equals("")) {
+            this.setLockSearch(false);
+            return;
+        }
+        ListViewUtil listViewUtil = new ListViewUtil();
+        Parts part = productHolder.lookupAssociatedPart(this.getPartsRowSelected());
+        this.setLockSearch(true);
+        listViewUtil.fillOutListView(productDeletePartIDListView, part.getPartID());
+        listViewUtil.fillOutListView(productDeletePartNameListView, part.getName());
+        listViewUtil.fillOutListView(productDeleteInventoryLevelListView, part.getInStock());
+        listViewUtil.fillOutListView(productDeletePricePerUnitListView, part.getPrice());
+        productSearchTextField.clear();
+    }
+
     @FXML
     public void deletePartsRow() {
-        Inventory inventory = this.getInventory();
-        Product product = inventory.lookupProduct(this.getProductRowSelected());
-        product.removeAssoicatedPart(this.getPartsRowSelected());
-        inventory.addProduct(this.getProductRowSelected(), product);
-        this.setInventory(inventory);
+        System.out.println("deleting row: " + this.getPartsRowSelected());
+        deleteHolder.add(this.getPartsRowSelected());
         ListViewUtil listViewUtil = new ListViewUtil();
-        listViewUtil.fillOutListViewSection(getProductDeleteListViews(), getProductPartsData());
+        listViewUtil.fillOutListViewSection(getProductDeleteListViews(), getProductPartsData(), deleteHolder);
 
     }
 
     @FXML
     public void selectEntirePartsRow(MouseEvent event) {
         int rowSelected = ((ListView) event.getSource()).getSelectionModel().getSelectedIndex();
-        this.setPartsRowSelected(rowSelected);
+        if(!this.isLockSearch()){
+            this.setPartsRowSelected(rowSelected);
+        }
         ListViewUtil listViewUtil = new ListViewUtil();
         listViewUtil.selectEntireRow(getProductDeleteListViews(), rowSelected);
     }
@@ -117,29 +166,31 @@ public class AddAndModifyProduct extends Util {
     public void onProductAddButtonClicked(MouseEvent event) throws IOException, InterruptedException {
         this.setAddOrModifyPart(getSourceString(event.getSource().toString()));
         saveData();
+        this.setAddOrModifyProduct("Modify");
         this.setWindowToSwitchTo(3);
         changeWindowTo(2, getStage(productAddButton));
     }
 
     public void saveData() {
         // sets the data for the new product
-        Product product = new Product();
-        product.setProductId(getTextFieldInt(productIDTextField));
-        product.setName(productNameTextField.getText());
-        product.setInStock(getTextFieldInt(productInventoryTextField));
-        product.setPrice(getTextFieldDouble(productPriceTextField));
-        product.setMax(getTextFieldInt(productMaxTextField));
-        product.setMin(getTextFieldInt(productMinTextField));
-        // adds all parts to the new product
-        for (Parts part : productPartsHolder) {
-            product.addAssociatedPart(part);
+        this.setLockSearch(false);
+        productHolder.setProductId(getTextFieldInt(productIDTextField));
+        productHolder.setName(productNameTextField.getText());
+        productHolder.setInStock(getTextFieldInt(productInventoryTextField));
+        productHolder.setPrice(getTextFieldDouble(productPriceTextField));
+        productHolder.setMax(getTextFieldInt(productMaxTextField));
+        productHolder.setMin(getTextFieldInt(productMinTextField));
+        for(int i : deleteHolder){
+            System.out.println("removing " + i);
+            productHolder.removeAssociatedPart(i);
         }
+
         // checks if the products being modified and saves to inventory
         Inventory inventory = this.getInventory();
         if (this.getAddOrModifyProduct().equals("Modify")) {
-            inventory.addProduct(this.getProductRowSelected(), product);
+            inventory.addProduct(this.getProductRowSelected(), productHolder);
         } else {
-            inventory.addProduct(product);
+            inventory.addProduct(productHolder);
         }
         this.setInventory(inventory);
 
@@ -149,5 +200,12 @@ public class AddAndModifyProduct extends Util {
     public void onSaveButtonClicked() throws IOException {
         saveData();
         changeWindowTo(1, getStage(productNameTextField));
+    }
+
+    @FXML
+    public void onCancelButtonPressed() throws IOException {
+        productHolder = this.getInventory().lookupProduct(this.getProductRowSelected());
+        backToOtherWindow(productAddButton);
+
     }
 }

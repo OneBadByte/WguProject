@@ -24,6 +24,15 @@ abstract class State{
     private int productRowSelected = 0;
     private boolean modifyingProduct = false;
     private int windowToSwitchTo = 1;
+    private boolean lockSearch = false;
+
+    public boolean isLockSearch() {
+        return lockSearch;
+    }
+
+    public void setLockSearch(boolean lockSearch) {
+        this.lockSearch = lockSearch;
+    }
 
     public String getAddOrModifyProduct() {
         return addOrModifyProduct;
@@ -207,6 +216,8 @@ class ListViewUtil<T>{
 
     private T t;
 
+
+
     public void fillOutListViewSection(ListView[] listViews, ArrayList[] arrayLists){
         // fill out list views
         fillOutListView(listViews[0], arrayLists[0]);
@@ -215,9 +226,30 @@ class ListViewUtil<T>{
         fillOutListView(listViews[3], arrayLists[3]);
     }
 
+    public void fillOutListViewSection(ListView[] listViews, ArrayList[] arrayLists, ArrayList excludes){
+        // fill out list views
+        fillOutListView(listViews[0], arrayLists[0], excludes);
+        fillOutListView(listViews[1], arrayLists[1], excludes);
+        fillOutListView(listViews[2], arrayLists[2], excludes);
+        fillOutListView(listViews[3], arrayLists[3], excludes);
+    }
+
     public void fillOutListView(ListView listView, ArrayList arrayList){
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         listView.getItems().setAll(arrayList);
+    }
+
+    public void fillOutListView(ListView listView, ArrayList arrayList, ArrayList excludes){
+        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ArrayList<Object> temp = new ArrayList<>();
+        int arrayRow = 0;
+        for(int i =0; i < arrayList.size(); i++){
+            if(!excludes.contains(i)){
+               temp.add(arrayList.get(i)) ;
+            }
+            arrayRow++;
+        }
+        listView.getItems().setAll(temp);
     }
 
     public void fillOutListView(ListView listView, T t){

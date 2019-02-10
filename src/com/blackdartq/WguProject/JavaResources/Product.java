@@ -54,7 +54,7 @@ public class Product {
         this.associatedParts.add(index, part);
     }
 
-    public boolean removeAssoicatedPart(int partNumber){
+    public boolean removeAssociatedPart(int partNumber){
         try{
             this.associatedParts.remove(partNumber);
             return true;

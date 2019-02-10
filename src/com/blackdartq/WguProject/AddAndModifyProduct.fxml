@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" style="-fx-background-color: #bcbdc0;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" style="-fx-background-color: #bcbdc0;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: #825469;">
          <children>
@@ -23,7 +23,7 @@
                <HBox.margin>
                   <Insets right="300.0" />
                </HBox.margin></Label>
-            <Button fx:id="productSearchButton" mnemonicParsing="false" text="Search" />
+            <Button fx:id="productSearchButton" mnemonicParsing="false" onMouseClicked="#searchForPart" text="Search" />
             <TextField fx:id="productSearchTextField" prefWidth="200.0" />
          </children>
          <padding>
@@ -53,12 +53,12 @@
                   <Label text="Price" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Max" GridPane.rowIndex="4" />
                   <Label text="Min" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <TextField fx:id="productIDTextField" GridPane.columnIndex="2" />
-                  <TextField fx:id="productNameTextField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <TextField fx:id="productInventoryTextField" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <TextField fx:id="productPriceTextField" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <TextField fx:id="productMaxTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField fx:id="productMinTextField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <TextField fx:id="productIDTextField" onKeyPressed="#checkForCompleteData" GridPane.columnIndex="2" />
+                  <TextField fx:id="productNameTextField" onKeyPressed="#checkForCompleteData" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="productInventoryTextField" onKeyPressed="#checkForCompleteData" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField fx:id="productPriceTextField" onKeyPressed="#checkForCompleteData" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <TextField fx:id="productMaxTextField" onKeyPressed="#checkForCompleteData" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="productMinTextField" onKeyPressed="#checkForCompleteData" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                </children>
                <padding>
                   <Insets left="10.0" right="10.0" />
