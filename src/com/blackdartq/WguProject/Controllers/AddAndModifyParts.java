@@ -15,13 +15,22 @@ public class AddAndModifyParts extends ControllerUtil {
     // intialize gets run when this class is created
     public void initialize() {
         Inventory inventory = this.getInventory();
+        
         // Changes the Header text to Add or Modify Parts
         partsLabel.setText(this.getAddOrModifyPart() + " Parts");
 
         if(this.getAddOrModifyPart().equals("Modify")){
             // sets all the text fields to the part being looked up
             setTextFields(inventory.lookupParts(this.getPartsRowSelected()));
+        }else{
+            if(this.isModifyingProduct()){
+                Product product = inventory.lookupProduct(this.getProductRowSelected());
+                partsIDTextField.setText(String.valueOf(product.getRandomPartsID()));
+            }else{
+                partsIDTextField.setText(String.valueOf(this.getInventory().getRandomPartsID()));
+            } 
         }
+        partsIDTextField.setDisable(true);
     }
 
     //++++ Parts Controls ++++

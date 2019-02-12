@@ -127,9 +127,9 @@ abstract class State{
 
 abstract class ControllerUtil extends State {
 
-    final String mainWindow = "../FXML/MainWindow.fxml";
-    final String addAndModifyParts = "../FXML/AddAndModifyParts.fxml";
-    final String addAndModifyProduct = "../FXML/AddAndModifyProduct.fxml";
+    final String mainWindow = "/com/blackdartq/WguProject/FXML/MainWindow.fxml";
+    final String addAndModifyParts = "/com/blackdartq/WguProject/FXML/AddAndModifyParts.fxml";
+    final String addAndModifyProduct = "/com/blackdartq/WguProject/FXML/AddAndModifyProduct.fxml";
 
     public void createStageAndSwitchScene(Stage stage, FXMLLoader loader) throws IOException {
         Parent parent;
@@ -225,6 +225,8 @@ abstract class ControllerUtil extends State {
         arrayLists[3] = this.getInventory().getAllProductPrices();
         return arrayLists;
     }
+
+
 }
 
 class ListViewUtil<T>{

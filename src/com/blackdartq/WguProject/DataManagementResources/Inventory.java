@@ -44,6 +44,11 @@ public class Inventory {
     //----------------------------
 
     //++++ parts functions ++++
+
+    public int getPartsSize(){
+        return this.parts.size();
+    }
+
     public void addParts(Parts part) {
         this.parts.add(part);
     }
@@ -109,8 +114,26 @@ public class Inventory {
         this.addProduct(product4);
     }
 
-    public int getPartsSize(){
-        return this.parts.size();
+    public int getRandomPartsID(){
+        ArrayList arrayList = this.getAllPartsIDs();
+        int biggestNumber = 0;
+        for(Object id : arrayList){
+            if((int)id > biggestNumber){
+                biggestNumber = (int)id;
+            }
+        }
+        return biggestNumber + 1;
+    }
+
+    public int getRandomProductID(){
+        ArrayList arrayList = this.getAllProductIDs();
+        int biggestNumber = 0;
+        for(Object id : arrayList){
+            if((int)id > biggestNumber){
+                biggestNumber = (int)id;
+            }
+        }
+        return biggestNumber + 1;
     }
 
     public ArrayList getAllPartsIDs(){

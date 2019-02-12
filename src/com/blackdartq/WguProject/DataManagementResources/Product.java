@@ -12,6 +12,16 @@ public class Product {
     private int min;
     private int max;
 
+    public int getRandomPartsID(){
+        ArrayList arrayList = this.getAllPartsIDs();
+        int biggestNumber = 0;
+        for(Object id : arrayList){
+            if((int)id > biggestNumber){
+                biggestNumber = (int)id;
+            }
+        }
+        return biggestNumber + 1;
+    }
 
     public int getAssociatedPartsSize(){
         return this.associatedParts.size();

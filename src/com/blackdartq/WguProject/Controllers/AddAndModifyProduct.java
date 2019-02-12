@@ -39,8 +39,96 @@ public class AddAndModifyProduct extends ControllerUtil {
             // sets the productSaveButton to disabled by default when adding a product
             productSaveButton.setDisable(true);
             this.setProductRowSelected(this.getInventory().getProductSize());
+            productIDTextField.setText(String.valueOf(this.getInventory().getRandomProductID()));
         }
+        productIDTextField.setDisable(true);
     }
+    //++++++ Product Controls ++++++++++++
+    // Labels
+    @FXML
+    private Label productHeaderLabel;
+
+    // Buttons
+    @FXML
+    private Button productSaveButton;
+    @FXML
+    private Button productCancelButton;
+    @FXML
+    private Button productAddButton;
+    @FXML
+    private Button productDeleteButton;
+    @FXML
+    private Button productSearchButton;
+
+    // TextFields
+    @FXML
+    private TextField productIDTextField;
+    @FXML
+    private TextField productNameTextField;
+    @FXML
+    private TextField productInventoryTextField;
+    @FXML
+    private TextField productPriceTextField;
+    @FXML
+    private TextField productMaxTextField;
+    @FXML
+    private TextField productMinTextField;
+    @FXML
+    private TextField productSearchTextField;
+
+    // List views
+    @FXML
+    ListView productDeletePartIDListView;
+    @FXML
+    ListView productDeletePartNameListView;
+    @FXML
+    ListView productDeleteInventoryLevelListView;
+    @FXML
+    ListView productDeletePricePerUnitListView;
+    @FXML
+    ListView productAddPartIDListView;
+    @FXML
+    ListView productAddPartNameListView;
+    @FXML
+    ListView productAddInventoryLevelListView;
+    @FXML
+    ListView productAddPricePerUnitListView;
+
+
+    // functions to get an ArrayList of controls
+
+    public TextField[] getProductTextFields() {
+        TextField[] textFields = {
+                productIDTextField,
+                productNameTextField,
+                productInventoryTextField,
+                productPriceTextField,
+                productMaxTextField,
+                productMinTextField,
+        };
+        return textFields;
+    }
+
+    public ListView[] getProductDeleteListViews() {
+        ListView[] listViews = {
+                productDeletePartIDListView,
+                productDeletePartNameListView,
+                productDeleteInventoryLevelListView,
+                productDeletePricePerUnitListView,
+        };
+        return listViews;
+    }
+
+    public ArrayList[] getProductPartsData() {
+        ArrayList[] arrayLists = {
+                productHolder.getAllPartsIDs(),
+                productHolder.getAllPartsNames(),
+                productHolder.getAllPartsInStocks(),
+                productHolder.getAllPartsPrices()
+        };
+        return arrayLists;
+    }
+    //------------------------------------
 
     //++++++ Product FXML Functions ++++++
     @FXML
@@ -89,7 +177,7 @@ public class AddAndModifyProduct extends ControllerUtil {
     }
 
     @FXML
-    public void selectEntirePartsRow(MouseEvent event) {
+    public void selectEntireDeletePartsRow(MouseEvent event) {
         int rowSelected = ((ListView) event.getSource()).getSelectionModel().getSelectedIndex();
         if(!this.isLockSearch()){
             this.setPartsRowSelected(rowSelected);
@@ -124,83 +212,6 @@ public class AddAndModifyProduct extends ControllerUtil {
 
     //------------------------------------
 
-    //++++++ Product Controls ++++++++++++
-    // Labels
-    @FXML
-    private Label productHeaderLabel;
-
-    // Buttons
-    @FXML
-    private Button productSaveButton;
-    @FXML
-    private Button productCancelButton;
-    @FXML
-    private Button productAddButton;
-    @FXML
-    private Button productDeleteButton;
-    @FXML
-    private Button productSearchButton;
-
-    // TextFields
-    @FXML
-    private TextField productIDTextField;
-    @FXML
-    private TextField productNameTextField;
-    @FXML
-    private TextField productInventoryTextField;
-    @FXML
-    private TextField productPriceTextField;
-    @FXML
-    private TextField productMaxTextField;
-    @FXML
-    private TextField productMinTextField;
-    @FXML
-    private TextField productSearchTextField;
-
-    // List views
-    @FXML
-    ListView productDeletePartIDListView;
-    @FXML
-    ListView productDeletePartNameListView;
-    @FXML
-    ListView productDeleteInventoryLevelListView;
-    @FXML
-    ListView productDeletePricePerUnitListView;
-
-    // functions to get an ArrayList of controls
-
-    public TextField[] getProductTextFields() {
-        TextField[] textFields = {
-                productIDTextField,
-                productNameTextField,
-                productInventoryTextField,
-                productPriceTextField,
-                productMaxTextField,
-                productMinTextField,
-        };
-        return textFields;
-    }
-
-    public ListView[] getProductDeleteListViews() {
-        ListView[] listViews = {
-                productDeletePartIDListView,
-                productDeletePartNameListView,
-                productDeleteInventoryLevelListView,
-                productDeletePricePerUnitListView,
-        };
-        return listViews;
-    }
-
-    public ArrayList[] getProductPartsData() {
-        ArrayList[] arrayLists = {
-                productHolder.getAllPartsIDs(),
-                productHolder.getAllPartsNames(),
-                productHolder.getAllPartsInStocks(),
-                productHolder.getAllPartsPrices()
-        };
-        return arrayLists;
-    }
-    //------------------------------------
 
     //++++++ Product Helper Functions ++++++
     public void checkMinMaxInventory(){

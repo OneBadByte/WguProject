@@ -138,12 +138,15 @@ public class MainWindowController extends ControllerUtil {
     @FXML
     public void searchForPart(MouseEvent event) {
         if (mainPartsSearchTextField.getText().equals("")) {
-            fillOutProductListView();
+            fillOutPartsListView();
             this.setLockSearch(false);
             return;
         }
         this.setLockSearch(true);
         int thing = Integer.parseInt(mainPartsSearchTextField.getText());
+        if(thing > this.getInventory().getPartsSize()){
+            return;
+        }
         Inventory inventory = this.getInventory();
         Parts part = inventory.lookupParts(thing - 1);
         fillOutPartsListView(part);
@@ -161,6 +164,9 @@ public class MainWindowController extends ControllerUtil {
         }
         this.setLockSearch(true);
         int thing = Integer.parseInt(mainProductsSearchTextField.getText());
+        if(thing > this.getInventory().getPartsSize()){
+            return;
+        }
         Inventory inventory = this.getInventory();
         Product product = inventory.lookupProduct(thing - 1);
         fillOutProductListView(product);
